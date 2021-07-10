@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  random:
+    image: example-random
+    deploy:
+      replicas: 1
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200m"
+        max-file: "10"
+    command: --batch-count 10 --kafka-url kafka:9092 --wait-time-seconds 3
+  device:
+    image: example-device
+    deploy:
+      replicas: 1
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200m"
+        max-file: "10"
+    volumes:
+      - ../../results:/src/results
+    command: --batch-count 10 --kafka-url kafka:9092
+  example:
+    image: example
+    deploy:
+      replicas: 1
+    restart: on-failure
+    ulimits:
+      nproc: 999999
+      nofile:
+        soft: 999999
+        hard: 999999
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200m"
+        max-file: "10"
+    init: true
+    command: "--worker-count 3 \
+      --kafka 'kafka:9092<>requests<>responses' \
+      --no-banner \
+      --verbose"

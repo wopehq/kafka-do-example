@@ -1,0 +1,28 @@
+version: "3.8"
+
+x-environment: &environments
+  SENTRY_KEY: 
+
+services:
+  example:
+    image: ${IMAGE}
+    deploy:
+      replicas: 1
+    restart: on-failure
+    ulimits:
+      nproc: 999999
+      nofile:
+        soft: 999999
+        hard: 999999
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200m"
+        max-file: "10"
+    init: true
+    environment:
+      <<: *environments
+    command: "--worker-count 3000 \
+      --kafka 'kafka:9092<>requests<>responses' \
+      --no-banner \
+      --verbose"
