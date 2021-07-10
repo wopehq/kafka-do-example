@@ -152,6 +152,7 @@ func (s *server) Run(ctx context.Context, cancel context.CancelFunc, wg *sync.Wa
 	}
 
 	<-ctx.Done()
+	wg.Done()
 	if len(consumeChan) > 0 { // produce back if there is any message.
 		err = kafka.ProduceBatch(ctx, producer, consumeChanToSlice(consumeChan), s.outTopic)
 		if err != nil {
@@ -162,7 +163,6 @@ func (s *server) Run(ctx context.Context, cancel context.CancelFunc, wg *sync.Wa
 			}
 		}
 	}
-	wg.Done()
 }
 
 // logErrors reads from errs channel and write them to stdout as a log.
