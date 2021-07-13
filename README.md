@@ -9,7 +9,7 @@
 
 We want to test kafka-do with an end-to-end application.
 
-Used kafka-do version: **`0.1.3`**
+Used kafka-do version: **`0.1.5`**
 
 ## How to use it
 
